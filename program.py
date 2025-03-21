@@ -11,8 +11,6 @@ def add_task(task: str,priority: str,status: str) -> bool:
     if priority in status:
         tasks[len(tasks)+1] = {"task":task,"priority":priority,"status":status}
 
-
-
 def delete_task(id):
     pass
 
