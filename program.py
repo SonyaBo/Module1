@@ -16,6 +16,39 @@ STATUS = {
     TODO: "todo"
 }
 
+def load_tasks() -> None:
+    """
+    Loads tasks from a file 'tasks.txt' into the tasks dictionary
+    Each task is expected to have an ID, name, description, priority, and status
+
+    :return: None
+    """
+    try:
+        with open('tasks.txt', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                task_data = line.strip().split(",")
+                if len(task_data) == 5:
+                    id, name, description, priority, status = task_data
+                    tasks[id] = {
+                        'name': name,
+                        'description': description,
+                        'priority': priority,
+                        'status': status
+                    }
+    except FileNotFoundError:
+        pass
+
+def save_tasks() -> None:
+    """
+    Saves the tasks from the tasks dictionary to a file 'tasks.txt'
+    Each task is saved with an ID, name, description, priority, and status
+
+    :return: None
+    """
+    with open('tasks.txt', 'w') as f:
+        for id, task in tasks.items():
+            f.write(f"{id},{task['name']},{task['description']},{task['priority']},{task['status']}\n")
 
 def add_task(name: str, desc: str, priority: str) -> bool:
     """
@@ -28,6 +61,7 @@ def add_task(name: str, desc: str, priority: str) -> bool:
     """
     if priority in PRIORITY and name != "" and desc != "":
         tasks[len(tasks) + 1] = {"name": name, "description": desc, "priority": priority, "status": TODO}
+        save_tasks()
         return True
     else:
         return False
@@ -41,6 +75,7 @@ def delete_task(id: int) -> bool:
     """
     if id in tasks:
         del tasks[id]
+        save_tasks()
         return True
     else:
         return False
@@ -124,6 +159,7 @@ def update_task_name(id: int, name: str) -> bool:
     :return: True if the name is updated
     """
     tasks[id]["name"] = name
+    save_tasks()
     return True
 
 def update_task_desc(id: int, desc: str) -> bool:
@@ -135,6 +171,7 @@ def update_task_desc(id: int, desc: str) -> bool:
     :return: True if the description is updated
     """
     tasks[id]["description"] = desc
+    save_tasks()
     return True
 
 def update_task_priority(id: int, prior: str) -> bool:
@@ -148,6 +185,7 @@ def update_task_priority(id: int, prior: str) -> bool:
     """
     if prior in PRIORITY:
         tasks[id]["priority"] = prior
+        save_tasks()
         return True
     else:
         raise Exception(f"\"{prior}\" is not a valid priority")
@@ -163,11 +201,13 @@ def update_task_status(id: int, status: str) -> bool:
     """
     if status in STATUS:
         tasks[id]["status"] = status
+        save_tasks()
         return True
     else:
         raise Exception(f"\"{status}\" is not a valid status")
 
 while True:
+    load_tasks()
     print("\n","-"*20)
     print("Welcome to TASK MANAGER (gl)\n\n")
     print("Show tasks: 1")
