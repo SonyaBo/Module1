@@ -16,6 +16,7 @@ STATUS = {
     TODO: "todo"
 }
 
+
 def load_tasks() -> None:
     """
     Loads tasks from a file 'tasks.txt' into the tasks dictionary
